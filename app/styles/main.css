@@ -54,7 +54,7 @@
   padding: 0; }
 
 html {
-  background: #e4e7e6;
+  background: #eceddf;
   font-size: 100%; }
 
 body {
@@ -1196,3 +1196,10 @@ label.css-label {
   .sort p, .sort a { margin-right: .5rem; }
 
   .sort a:last-child { margin-right: 0; }}
+
+
+
+.logo{
+  text-align: center;
+  margin-top: 20px;
+}
