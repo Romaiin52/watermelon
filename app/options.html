@@ -7,10 +7,206 @@
     <!-- endbuild -->
     <!-- build:css styles/main.css -->
     <link href="styles/main.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="images/icon-16.jpg" />
     <!-- endbuild -->
   </head>
-  <body>
-    <h1>'Allo, 'Allo!</h1>
+
+
+<body class="">
+    <!-- ngView:  -->
+    <div ng-view="" class="ng-scope"><main id="mainContent" class="ng-scope">
+
+  <header class="nav-wrap">
+    <nav class="search-wrap">
+      <form class="search ng-pristine ng-valid" role="search">
+        <div class="form-group search-group">
+          <input autofocus="true" type="search" class="form-control ng-pristine ng-valid" ng-model="searchText" typeahead="tag for tag in getTypeheadSuggestions($viewValue)"><ul class="typeahead-dropdown ng-isolate-scope" ng-style="{display: isOpen()&amp;&amp;'block' || 'none'}" typeahead-popup="" matches="matches" active="activeIdx" select="select(activeIdx)" query="query" position="position" style="display: none;">
+        <!-- ngRepeat: match in matches -->
+      </ul>
+        </div>
+      </form>
+    </nav>
+    <a class="settings-toggle" ng-click="toggleSettings()"></a>
+  </header>
+
+  <h1 style="text-align:center;margin-top:20px;color:grey;"><img src="images/icon-128.jpg" alt="logo"> #WatermelonIsWatchingYou <img src="images/icon-128.jpg" alt="logo"></h1>
+
+  <div class="settings">
+    <a class="close" ng-click="toggleSettings()"></a>
+    <div class="settings-wrap">
+      <ul class="col-1">
+        <li><a class="docs" href="https://github.com/deweyapp/dewey-website/blob/master/README.md" target="_blank">How To</a></li>
+        <li><a class="feedback" href="https://github.com/deweyapp/dewey/issues" target="_blank">Feedback</a></li>
+        <li><a class="review" href="https://chrome.google.com/webstore/detail/dewey-bookmarks/aahpfefkmihhdabllidnlipghcjgpkdm/reviews" target="_blank">Review</a></li>
+        <li><a class="donate" href="https://github.com/deweyapp/dewey-website/blob/master/README.md#donate" target="_blank">Donate</a></li>
+        <li><a class="email" href="mailto:support@deweyapp.io?Subject=Hello, Dewey.">Email Us</a></li>
+        <li><a class="website" href="http://deweyapp.io" target="_blank">Website</a></li>
+      </ul> <!-- .col-1 -->
+      <ul class="col-2">
+        <li>
+          <form class="ng-pristine ng-valid">
+            <div>Settings:</div>
+
+            <div class="checkbox" title="Don’t show thumbnails for bookmarks" ng-click="setShowThumbnails()">
+              <input id="hide-thumbs" class="css-checkbox" type="checkbox" ng-checked="showThumbnails" checked="checked">
+              <label for="hide-thumbs" class="css-label">Show Screenshots</label>
+            </div>
+
+            <div class="checkbox" title="Don’t show top-level folders as tags (Mobile Bookmarks, Other Bookmarks, ...)" ng-click="setHideTopLevelFolders()">
+              <input id="hide-folders" class="css-checkbox" type="checkbox" ng-checked="hideTopLevelFolders">
+              <label for="hide-folders" class="css-label">Hide Top-level Folders as Tags</label>
+            </div>
+            <div class="credits"><p>Screenshots by <a class="important" href="http://www.page2images.com/" target="_blank">Page2Images</a></p></div>
+          </form>
+        </li>
+      </ul> <!-- .col-2 -->
+    </div> <!-- .settings-wrap -->
+
+    <div class="credits makers">
+      Built by:
+      <a class="important" href="https://twitter.com/outcoldman" target="_blank">Denis</a>,
+      <a class="important" href="https://twitter.com/jmwlsn" target="_blank">Jamie</a>
+      and <a class="important" href="https://twitter.com/artemgrygor" target="_blank">Artem</a>
+    </div>
+
+  </div> <!-- settings -->
+
+  <div class="grid">
+
+    <div class="tags-wrap">
+      <a class="tags-toggle" data-toggle="dropdown"></a>
+      <ui class="tags-list">
+        <!-- ngRepeat: tag in tags | orderBy: 'tagText' --><li ng-repeat="tag in tags | orderBy: 'tagText'" class="ng-scope">
+          <a target="_blank" ng-click="selectTag(tag.tagText)" class="ng-binding">Barre de favoris</a>
+        </li><!-- end ngRepeat: tag in tags | orderBy: 'tagText' -->
+      </ui>
+    </div>
+
+    <ul class="sort">
+      <li>
+        <p>Sort:</p>
+        <!-- ngRepeat: order in orders --><a ng-repeat="order in orders" ng-class="{ 'sort-active': order == currentOrder }" ng-click="changeOrder(order)" class="ng-scope ng-binding sort-active">Date</a><!-- end ngRepeat: order in orders --><a ng-repeat="order in orders" ng-class="{ 'sort-active': order == currentOrder }" ng-click="changeOrder(order)" class="ng-scope ng-binding">Title</a><!-- end ngRepeat: order in orders --><a ng-repeat="order in orders" ng-class="{ 'sort-active': order == currentOrder }" ng-click="changeOrder(order)" class="ng-scope ng-binding">URL</a><!-- end ngRepeat: order in orders -->
+      </li>
+    </ul>
+
+    <ul class="list-bookmarks">
+      <!-- ngRepeat: bookmark in (filteredBookmarks | orderBy:currentOrder.value | limitTo:totalDisplayed) --><li ng-repeat="bookmark in (filteredBookmarks | orderBy:currentOrder.value | limitTo:totalDisplayed)" class="ng-scope">
+
+        <div class="card card-primary" ng-class="{'card-primary': ($index == selectedIndex), 'card-small': !showThumbnails}" ng-click="selectBookmark($index)">
+
+          <div class="edit-toggle" ng-click="editBookmark(bookmark)"></div>
+          <a class="bookmark-link" href="https://www.behance.net/gallery/26241257/FREE-Elegant-Vector-Kit-with-60-Workspace-Elements"></a>
+
+          <div class="thumbnail" style="background: url(http://api.page2images.com/ccimages/4c/53/srAlCe7k7vHND8Ot.jpg);" my-update-background="" title="https://www.behance.net/gallery/26241257/FREE-Elegant-Vector-Kit-with-60-Workspace-Elements"></div>
+
+          <div class="details">
+
+            <img class="favicon" ng-src="http://dewey-server.azurewebsites.net/favicon?query=www.behance.net" alt="www.behance.net" crossorigin="anonymous" src="http://dewey-server.azurewebsites.net/favicon?query=www.behance.net">
+            <h2 class="ng-binding">FREE Elegant Vector Kit with 60 Workspace Elements on Behance</h2>
+
+            <div class="tag-links">
+              <!-- ngRepeat: tag in bookmark.tag --><span ng-repeat="tag in bookmark.tag" class="ng-scope">
+                <a ng-class="{'badge-custom': tag.custom}" ng-click="selectTag(tag.text)" class="ng-binding">Barre de favoris</a>
+              </span><!-- end ngRepeat: tag in bookmark.tag -->
+            </div><!-- tags -->
+
+          </div><!-- details -->
+        </div><!-- card -->
+      </li><!-- end ngRepeat: bookmark in (filteredBookmarks | orderBy:currentOrder.value | limitTo:totalDisplayed) --><li ng-repeat="bookmark in (filteredBookmarks | orderBy:currentOrder.value | limitTo:totalDisplayed)" class="ng-scope">
+
+        <div class="card" ng-class="{'card-primary': ($index == selectedIndex), 'card-small': !showThumbnails}" ng-click="selectBookmark($index)">
+
+          <div class="edit-toggle" ng-click="editBookmark(bookmark)"></div>
+          <a class="bookmark-link" href="http://lustucru-staging.nc3005.novius.net/"></a>
+
+          <div class="thumbnail" style="background: url(http://api.page2images.com/ccimages/0e/b1/rHEhKub1lamyNjhV.jpg);" my-update-background="" title="http://lustucru-staging.nc3005.novius.net/"></div>
+
+          <div class="details">
+
+            <img class="favicon" ng-src="http://dewey-server.azurewebsites.net/favicon?query=lustucru-staging.nc3005.novius.net" alt="lustucru-staging.nc3005.novius.net" crossorigin="anonymous" src="http://dewey-server.azurewebsites.net/favicon?query=lustucru-staging.nc3005.novius.net">
+            <h2 class="ng-binding">Staging</h2>
+
+            <div class="tag-links">
+              <!-- ngRepeat: tag in bookmark.tag --><span ng-repeat="tag in bookmark.tag" class="ng-scope">
+                <a ng-class="{'badge-custom': tag.custom}" ng-click="selectTag(tag.text)" class="ng-binding">Barre de favoris</a>
+              </span><!-- end ngRepeat: tag in bookmark.tag -->
+            </div><!-- tags -->
+
+          </div><!-- details -->
+        </div><!-- card -->
+      </li><!-- end ngRepeat: bookmark in (filteredBookmarks | orderBy:currentOrder.value | limitTo:totalDisplayed) --><li ng-repeat="bookmark in (filteredBookmarks | orderBy:currentOrder.value | limitTo:totalDisplayed)" class="ng-scope">
+
+        <div class="card" ng-class="{'card-primary': ($index == selectedIndex), 'card-small': !showThumbnails}" ng-click="selectBookmark($index)">
+
+          <div class="edit-toggle" ng-click="editBookmark(bookmark)"></div>
+          <a class="bookmark-link" href="http://www.lafermeduweb.net/billet/comment-transformer-internet-explorer-en-navigateur-moderne-785.html"></a>
+
+          <div class="thumbnail" style="background: url(http://api.page2images.com/ccimages/60/c3/jOtPeNAUIfPEC6uU.jpg);" my-update-background="" title="http://www.lafermeduweb.net/billet/comment-transformer-internet-explorer-en-navigateur-moderne-785.html"></div>
+
+          <div class="details">
+
+            <img class="favicon" ng-src="http://dewey-server.azurewebsites.net/favicon?query=www.lafermeduweb.net" alt="www.lafermeduweb.net" crossorigin="anonymous" src="http://dewey-server.azurewebsites.net/favicon?query=www.lafermeduweb.net">
+            <h2 class="ng-binding">Compatibilité IE</h2>
+
+            <div class="tag-links">
+              <!-- ngRepeat: tag in bookmark.tag --><span ng-repeat="tag in bookmark.tag" class="ng-scope">
+                <a ng-class="{'badge-custom': tag.custom}" ng-click="selectTag(tag.text)" class="ng-binding">Barre de favoris</a>
+              </span><!-- end ngRepeat: tag in bookmark.tag -->
+            </div><!-- tags -->
+
+          </div><!-- details -->
+        </div><!-- card -->
+      </li><!-- end ngRepeat: bookmark in (filteredBookmarks | orderBy:currentOrder.value | limitTo:totalDisplayed) --><li ng-repeat="bookmark in (filteredBookmarks | orderBy:currentOrder.value | limitTo:totalDisplayed)" class="ng-scope">
+
+        <div class="card" ng-class="{'card-primary': ($index == selectedIndex), 'card-small': !showThumbnails}" ng-click="selectBookmark($index)">
+
+          <div class="edit-toggle" ng-click="editBookmark(bookmark)"></div>
+          <a class="bookmark-link" href="http://copypastecharacter.com/all-characters"></a>
+
+          <div class="thumbnail" style="background: url(http://api.page2images.com/ccimages/a4/db/gwV8IIk3JvPe6eKW.jpg);" my-update-background="" title="http://copypastecharacter.com/all-characters"></div>
+
+          <div class="details">
+
+            <img class="favicon" ng-src="http://dewey-server.azurewebsites.net/favicon?query=copypastecharacter.com" alt="copypastecharacter.com" crossorigin="anonymous" src="http://dewey-server.azurewebsites.net/favicon?query=copypastecharacter.com">
+            <h2 class="ng-binding">All Characters</h2>
+
+            <div class="tag-links">
+              <!-- ngRepeat: tag in bookmark.tag --><span ng-repeat="tag in bookmark.tag" class="ng-scope">
+                <a ng-class="{'badge-custom': tag.custom}" ng-click="selectTag(tag.text)" class="ng-binding">Barre de favoris</a>
+              </span><!-- end ngRepeat: tag in bookmark.tag -->
+            </div><!-- tags -->
+
+          </div><!-- details -->
+        </div><!-- card -->
+      </li><!-- end ngRepeat: bookmark in (filteredBookmarks | orderBy:currentOrder.value | limitTo:totalDisplayed) --><li ng-repeat="bookmark in (filteredBookmarks | orderBy:currentOrder.value | limitTo:totalDisplayed)" class="ng-scope">
+
+        <div class="card" ng-class="{'card-primary': ($index == selectedIndex), 'card-small': !showThumbnails}" ng-click="selectBookmark($index)">
+
+          <div class="edit-toggle" ng-click="editBookmark(bookmark)"></div>
+          <a class="bookmark-link" href="https://www.inkbrush.com/"></a>
+
+          <div class="thumbnail" style="background: url(http://api.page2images.com/ccimages/be/5c/3q1EzOyBH2nglb4z.jpg);" my-update-background="" title="https://www.inkbrush.com/"></div>
+
+          <div class="details">
+
+            <img class="favicon" ng-src="http://dewey-server.azurewebsites.net/favicon?query=www.inkbrush.com" alt="www.inkbrush.com" crossorigin="anonymous" src="http://dewey-server.azurewebsites.net/favicon?query=www.inkbrush.com">
+            <h2 class="ng-binding">Inkbrush</h2>
+
+            <div class="tag-links">
+              <!-- ngRepeat: tag in bookmark.tag --><span ng-repeat="tag in bookmark.tag" class="ng-scope">
+                <a ng-class="{'badge-custom': tag.custom}" ng-click="selectTag(tag.text)" class="ng-binding">Barre de favoris</a>
+              </span><!-- end ngRepeat: tag in bookmark.tag -->
+            </div><!-- tags -->
+
+          </div><!-- details -->
+        </div><!-- card -->
+      </li><!-- end ngRepeat: bookmark in (filteredBookmarks | orderBy:currentOrder.value | limitTo:totalDisplayed) --><!-- bookmarks in bookmarks -->
+    </ul><!-- list-bookmarks -->
+  </div><!-- grid -->
+
+</main></div><div class="row" id="loadMorePlaceholder">
+  
+</div>   
 
     <!-- build:js scripts/vendor.js -->
     <!-- bower:js -->
